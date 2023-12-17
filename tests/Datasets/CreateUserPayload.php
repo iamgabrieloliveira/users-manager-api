@@ -28,7 +28,7 @@ function shortUserName(): string {
 }
 
 function shortPassword(): string {
-    return substr(fake()->password(), 0, PasswordLengthRule::PASSWORD_MINIMUM_LENGTH);
+    return fake()->password(maxLength: PasswordLengthRule::PASSWORD_MINIMUM_LENGTH - 1);
 }
 
 dataset('create user invalid payloads', fn () => ([
