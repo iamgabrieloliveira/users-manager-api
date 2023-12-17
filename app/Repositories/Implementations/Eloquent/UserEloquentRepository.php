@@ -20,4 +20,9 @@ class UserEloquentRepository implements UserRepositoryContract
             'user_name'  => $DTO->userName,
         ]);
     }
+
+    public function delete(User $user): bool
+    {
+        return $user->delete();
+    }
 }
