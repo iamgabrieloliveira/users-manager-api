@@ -9,6 +9,7 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Response;
 use Illuminate\Validation\ValidationException;
+use Symfony\Component\HttpFoundation\Response as HttpCode;
 use Throwable;
 
 class Handler extends ExceptionHandler
@@ -34,10 +35,11 @@ class Handler extends ExceptionHandler
         });
     }
 
-    public function render($request, Throwable $e): Response|JsonResponse|RedirectResponse|\Symfony\Component\HttpFoundation\Response
+    public function render($request, Throwable $e): Response|JsonResponse|RedirectResponse|HttpCode
     {
         return match(get_class($e)) {
             ValidationException::class => $this->handleValidationException($e),
+            UnableToDeleteModelException::class => $this->handleUnableToDeleteModelException($e),
             default => parent::render($request, $e),
         };
     }
@@ -47,6 +49,15 @@ class Handler extends ExceptionHandler
         return response()->json([
             'message' => 'Validation Error',
             'errors' => $e->errors(),
-        ], \Symfony\Component\HttpFoundation\Response::HTTP_BAD_REQUEST);
+        ], HttpCode::HTTP_BAD_REQUEST);
+    }
+
+    private function handleUnableToDeleteModelException(UnableToDeleteModelException $e): JsonResponse
+    {
+        $modelName = str($e->model::class)->lower()->explode('\\')->last();
+
+        return response()->json([
+            'message' => sprintf('Unable to delete %s', $modelName),
+        ], HttpCode::HTTP_BAD_REQUEST);
     }
 }
