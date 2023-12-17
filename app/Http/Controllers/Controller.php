@@ -18,4 +18,9 @@ class Controller extends BaseController
     {
         return response()->json(['id' => $id], Response::HTTP_CREATED);
     }
+
+    public function noContent(): JsonResponse
+    {
+        return response()->json([], Response::HTTP_NO_CONTENT);
+    }
 }
