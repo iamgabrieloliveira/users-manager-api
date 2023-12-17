@@ -24,7 +24,7 @@ dataset('create user valid payloads', fn () => ([
 ]));
 
 function shortUserName(): string {
-    return substr(fake()->userName(), 0, UserNameLengthRule::USER_NAME_MINIMUM_LENGTH + 1);
+    return substr(fake()->userName(), 0, UserNameLengthRule::USER_NAME_MINIMUM_LENGTH - 1);
 }
 
 function shortPassword(): string {
