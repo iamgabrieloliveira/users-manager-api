@@ -10,4 +10,6 @@ use App\Models\User;
 interface UserRepositoryContract extends RepositoryContract
 {
     public function store(StoreUserDTO $DTO): User;
+
+    public function delete(User $user): bool;
 }
