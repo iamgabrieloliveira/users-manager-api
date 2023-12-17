@@ -18,7 +18,7 @@ class PasswordLengthRule implements ValidationRule
 
     public function validate(string $attribute, mixed $value, Closure $fail): void
     {
-        if (str($value) < self::PASSWORD_MINIMUM_LENGTH) {
+        if (strlen($value) < self::PASSWORD_MINIMUM_LENGTH) {
             $fail($this->message());
         }
     }
