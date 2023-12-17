@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Exceptions;
 
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
@@ -40,6 +41,7 @@ class Handler extends ExceptionHandler
         return match(get_class($e)) {
             ValidationException::class => $this->handleValidationException($e),
             UnableToDeleteModelException::class => $this->handleUnableToDeleteModelException($e),
+            ModelNotFoundException::class => $this->handleModelNotFoundException(),
             default => parent::render($request, $e),
         };
     }
@@ -59,5 +61,12 @@ class Handler extends ExceptionHandler
         return response()->json([
             'message' => sprintf('Unable to delete %s', $modelName),
         ], HttpCode::HTTP_BAD_REQUEST);
+    }
+
+    private function handleModelNotFoundException(): JsonResponse
+    {
+        return response()->json([
+           'message' => 'Resource not found',
+        ], HttpCode::HTTP_NOT_FOUND);
     }
 }
