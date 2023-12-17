@@ -20,7 +20,7 @@ it('should create a user successfully', function (array $payload) {
 
 it('should not create a user with invalid payload', function (array $payload) {
     // Arrange & Act
-    $response = storeUser($payload)->dump();
+    $response = storeUser($payload);
 
     // Assert
     $response->assertBadRequest();
