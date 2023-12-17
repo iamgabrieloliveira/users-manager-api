@@ -14,7 +14,7 @@
 uses(
     Tests\TestCase::class,
     \Illuminate\Foundation\Testing\DatabaseMigrations::class,
-)->in('Feature');
+)->in('Feature', 'Unit');
 
 /*
 |--------------------------------------------------------------------------
