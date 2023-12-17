@@ -18,4 +18,10 @@ it('should create a user successfully', function (array $payload) {
     assertDatabaseHas('users', ['id' => 1]);
 })->with('create user valid payloads');
 
-it('should not create a user with invalid payload')->with('create user invalid payloads')->todo();
+it('should not create a user with invalid payload', function (array $payload) {
+    // Arrange & Act
+    $response = storeUser($payload)->dump();
+
+    // Assert
+    $response->assertBadRequest();
+})->with('create user invalid payloads');
