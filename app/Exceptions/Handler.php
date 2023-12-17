@@ -5,6 +5,10 @@ declare(strict_types=1);
 namespace App\Exceptions;
 
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
+use Illuminate\Http\JsonResponse;
+use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\Response;
+use Illuminate\Validation\ValidationException;
 use Throwable;
 
 class Handler extends ExceptionHandler
@@ -28,5 +32,21 @@ class Handler extends ExceptionHandler
         $this->reportable(function (Throwable $e) {
             //
         });
+    }
+
+    public function render($request, Throwable $e): Response|JsonResponse|RedirectResponse|\Symfony\Component\HttpFoundation\Response
+    {
+        return match(get_class($e)) {
+            ValidationException::class => $this->handleValidationException($e),
+            default => parent::render($request, $e),
+        };
+    }
+
+    private function handleValidationException(ValidationException $e): JsonResponse
+    {
+        return response()->json([
+            'message' => 'Validation Error',
+            'errors' => $e->errors(),
+        ], \Symfony\Component\HttpFoundation\Response::HTTP_BAD_REQUEST);
     }
 }
