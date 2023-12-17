@@ -11,6 +11,8 @@
 |
 */
 
+use function Pest\Laravel\assertSoftDeleted;
+
 uses(
     Tests\TestCase::class,
     \Illuminate\Foundation\Testing\DatabaseMigrations::class,
@@ -29,6 +31,13 @@ uses(
 
 expect()->extend('toBeOne', function () {
     return $this->toBe(1);
+});
+
+expect()->extend('toBeSoftDeleted', function (\Carbon\Carbon $when = null) {
+    /** @var $model \Illuminate\Database\Eloquent\Model */
+    $model = $this->value;
+
+    return assertSoftDeleted($model->getTable(), ['id' => $model->getKey()]);
 });
 
 /*
