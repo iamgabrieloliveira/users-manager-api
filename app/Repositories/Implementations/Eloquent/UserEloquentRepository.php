@@ -23,6 +23,6 @@ class UserEloquentRepository implements UserRepositoryContract
 
     public function delete(User $user): bool
     {
-        return $user->delete();
+        return (bool) $user->delete();
     }
 }
