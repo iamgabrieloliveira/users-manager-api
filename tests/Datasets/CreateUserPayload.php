@@ -10,7 +10,7 @@ function validPayload(array $override = []): array {
         'first_name' => fake()->firstName(),
         'last_name' => fake()->lastName(),
         'user_name' =>  fake()->userName(),
-        'password' => fake()->password(),
+        'password' => fake()->password(minLength: PasswordLengthRule::PASSWORD_MINIMUM_LENGTH),
         'email' => fake()->email(),
         ...$override,
     ]];
