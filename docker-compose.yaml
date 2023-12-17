@@ -1,0 +1,50 @@
+version: '3.8'
+
+services:
+  database:
+    image: postgres:16-alpine
+    restart: unless-stopped
+    container_name: database
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_HOST_AUTH_METHOD: trust
+    volumes:
+      - db-data:/var/lib/postgresql/data
+    networks:
+      - app
+
+  app:
+    build:
+      context: .
+      dockerfile: app.dockerfile
+    container_name: app
+    restart: unless-stopped
+    depends_on:
+      - database
+    links:
+      - database
+    volumes:
+      - .:/app
+    working_dir: /app
+    networks:
+      - app
+
+  web:
+    image: nginx:1.25-alpine
+    container_name: webserver
+    restart: unless-stopped
+    ports:
+      - "80:80"
+    networks:
+      - app
+    volumes:
+      - ./localhost.conf:/etc/nginx/conf.d/default.conf
+      - ./xdebug.ini:/usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini
+volumes:
+  db-data:
+    driver: local
+
+networks:
+  app:
+    driver: bridge
