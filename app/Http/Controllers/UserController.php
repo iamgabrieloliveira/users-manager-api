@@ -32,7 +32,7 @@ class UserController extends Controller
      */
     public function destroy(User $user): JsonResponse
     {
-        $this->userService->delete($user);
+        $this->userService->destroy($user);
 
         return $this->noContent();
     }

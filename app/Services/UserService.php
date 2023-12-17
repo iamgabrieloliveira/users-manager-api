@@ -25,7 +25,7 @@ class UserService
     /**
      * @throws UnableToDeleteModelException
      */
-    public function delete(User $user): void
+    public function destroy(User $user): void
     {
         $successfully = $this->userRepository->delete($user);
 
