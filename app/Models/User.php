@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Models;
 
+use App\EloquentBuilders\UserEloquentBuilder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
@@ -26,17 +27,17 @@ use Laravel\Sanctum\HasApiTokens;
  * @property-read \Illuminate\Database\Eloquent\Collection<int, \Laravel\Sanctum\PersonalAccessToken> $tokens
  * @property-read int|null $tokens_count
  * @method static \Database\Factories\UserFactory factory($count = null, $state = [])
- * @method static \Illuminate\Database\Eloquent\Builder|User newModelQuery()
- * @method static \Illuminate\Database\Eloquent\Builder|User newQuery()
- * @method static \Illuminate\Database\Eloquent\Builder|User query()
- * @method static \Illuminate\Database\Eloquent\Builder|User whereCreatedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|User whereEmail($value)
- * @method static \Illuminate\Database\Eloquent\Builder|User whereFirstName($value)
- * @method static \Illuminate\Database\Eloquent\Builder|User whereId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|User whereLastName($value)
- * @method static \Illuminate\Database\Eloquent\Builder|User wherePassword($value)
- * @method static \Illuminate\Database\Eloquent\Builder|User whereUpdatedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|User whereUserName($value)
+ * @method static UserEloquentBuilder|User newModelQuery()
+ * @method static UserEloquentBuilder|User newQuery()
+ * @method static UserEloquentBuilder|User query()
+ * @method static UserEloquentBuilder|User whereCreatedAt($value)
+ * @method static UserEloquentBuilder|User whereEmail($value)
+ * @method static UserEloquentBuilder|User whereFirstName($value)
+ * @method static UserEloquentBuilder|User whereId($value)
+ * @method static UserEloquentBuilder|User whereLastName($value)
+ * @method static UserEloquentBuilder|User wherePassword($value)
+ * @method static UserEloquentBuilder|User whereUpdatedAt($value)
+ * @method static UserEloquentBuilder|User whereUserName($value)
  * @mixin \Eloquent
  */
 class User extends Authenticatable
@@ -58,4 +59,9 @@ class User extends Authenticatable
     protected $casts = [
         'password' => 'hashed',
     ];
+
+    public function newEloquentBuilder($query): UserEloquentBuilder
+    {
+        return new UserEloquentBuilder($query);
+    }
 }
