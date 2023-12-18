@@ -23,4 +23,9 @@ class Controller extends BaseController
     {
         return response()->json([], Response::HTTP_NO_CONTENT);
     }
+
+    public function ok(array $data = []): JsonResponse
+    {
+      return response()->json($data, Response::HTTP_OK);
+    }
 }
