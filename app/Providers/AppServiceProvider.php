@@ -34,7 +34,7 @@ class AppServiceProvider extends ServiceProvider
     private function bindMacros(): void
     {
         JsonResponse::macro( 'asAssertable',
-            function () {
+            function (): TestResponse {
                 /** @var $response JsonResponse */
                 $response = $this;
 
