@@ -2,16 +2,12 @@
 
 declare(strict_types=1);
 
-use function Pest\Laravel\{
-    assertDatabaseHas,
-};
-use function Tests\Helpers\Http\{
-    storeUser,
-};
+use function Pest\Laravel\assertDatabaseHas;
+use function Tests\Helpers\Http\User\store;
 
 it('should create a user successfully', function (array $payload) {
     // Arrange & Act
-    $response = storeUser($payload);
+    $response = store($payload);
 
     // Assert
     $response->assertCreated();
@@ -20,7 +16,7 @@ it('should create a user successfully', function (array $payload) {
 
 it('should not create a user with invalid payload', function (array $payload) {
     // Arrange & Act
-    $response = storeUser($payload);
+    $response = store($payload);
 
     // Assert
     $response->assertBadRequest();

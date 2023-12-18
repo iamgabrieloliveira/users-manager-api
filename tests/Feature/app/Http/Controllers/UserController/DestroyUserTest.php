@@ -1,16 +1,15 @@
 <?php
 
 use App\Models\User;
-use function Tests\Helpers\Http\{
-    destroyUser,
-};
+
+use function Tests\Helpers\Http\User\destroy;
 
 it('should delete user successfully', function () {
     // Arrange
     $user = User::factory()->create();
 
     // Act
-    $response = destroyUser($user->id);
+    $response = destroy($user->id);
 
     // Assert
     $response->assertNoContent();
