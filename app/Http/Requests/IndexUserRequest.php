@@ -11,7 +11,7 @@ class IndexUserRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'q' => ['sometimes'|'string'],
+            'q' => ['sometimes', 'string'],
         ];
     }
 
