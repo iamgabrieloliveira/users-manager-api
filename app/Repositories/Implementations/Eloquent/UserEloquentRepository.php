@@ -7,6 +7,7 @@ namespace App\Repositories\Implementations\Eloquent;
 use App\DataTransferObjects\User\StoreUserDTO;
 use App\Models\User;
 use App\Repositories\Contracts\UserRepositoryContract;
+use Illuminate\Database\Eloquent\Collection;
 
 class UserEloquentRepository implements UserRepositoryContract
 {
@@ -24,5 +25,15 @@ class UserEloquentRepository implements UserRepositoryContract
     public function delete(User $user): bool
     {
         return (bool) $user->delete();
+    }
+
+    public function all(): Collection
+    {
+        return User::all();
+    }
+
+    public function searchByName(string $name): Collection
+    {
+        return User::query()->filterByName($name)->get();
     }
 }
