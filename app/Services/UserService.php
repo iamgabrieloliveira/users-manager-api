@@ -8,6 +8,7 @@ use App\DataTransferObjects\User\StoreUserDTO;
 use App\Exceptions\UnableToDeleteModelException;
 use App\Models\User;
 use App\Repositories\Contracts\UserRepositoryContract;
+use Illuminate\Database\Eloquent\Collection;
 
 class UserService
 {
@@ -15,6 +16,19 @@ class UserService
         private readonly UserRepositoryContract $userRepository,
     ) {
         //
+    }
+
+    /**
+     * @param ?string $name
+     * @return Collection<User>
+     */
+    public function listUsers(?string $name): Collection
+    {
+        if (blank($name)) {
+            return $this->userRepository->all();
+        }
+
+        return $this->userRepository->searchByName($name);
     }
 
     public function store(StoreUserDTO $DTO): User
