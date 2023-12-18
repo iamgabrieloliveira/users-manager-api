@@ -15,3 +15,11 @@ it('should delete user successfully', function () {
     $response->assertNoContent();
     expect($user)->toBeSoftDeleted();
 });
+
+it('should return error when user to delete not exists', function () {
+    // Arrange & Act
+    $response = destroy(0);
+
+    // Assert
+    $response->assertNotFound();
+});
