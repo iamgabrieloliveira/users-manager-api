@@ -6,9 +6,19 @@ namespace App\Repositories\Contracts;
 
 use App\DataTransferObjects\User\StoreUserDTO;
 use App\Models\User;
+use Illuminate\Database\Eloquent\Collection;
 
 interface UserRepositoryContract extends RepositoryContract
 {
+    /** @return Collection<User> */
+    public function all(): Collection;
+
+    /**
+    * @param string $name
+    * @return Collection<User>
+    */
+    public function searchByName(string $name): Collection;
+
     public function store(StoreUserDTO $DTO): User;
 
     public function delete(User $user): bool;
