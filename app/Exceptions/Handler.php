@@ -60,11 +60,8 @@ class Handler extends ExceptionHandler
 
     private function handleUnableToDeleteModelException(UnableToDeleteModelException $e): JsonResponse
     {
-        $modelName = str($e->model::class)->lower()->explode('\\')->last();
-
-        return response()->json([
-            'message' => sprintf('Unable to delete %s', $modelName),
-        ], HttpCode::HTTP_BAD_REQUEST);
+        $message = $e->buildMessage();
+        return response()->json(compact('message'), HttpCode::HTTP_BAD_REQUEST);
     }
 
     private function handleModelNotFoundException(): JsonResponse
