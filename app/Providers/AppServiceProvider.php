@@ -6,7 +6,10 @@ namespace App\Providers;
 
 use App\Repositories\Contracts\UserRepositoryContract;
 use App\Repositories\Implementations\Eloquent\UserEloquentRepository;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Support\ServiceProvider;
+use Illuminate\Testing\TestResponse;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -23,7 +26,21 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        //
+        Model::preventLazyLoading(! app()->isProduction());
+
+        $this->bindMacros();
+    }
+
+    private function bindMacros(): void
+    {
+        JsonResponse::macro( 'asAssertable',
+            function () {
+                /** @var $response JsonResponse */
+                $response = $this;
+
+                return TestResponse::fromBaseResponse($response);
+            }
+        );
     }
 
     private function bindRepositories(): void
