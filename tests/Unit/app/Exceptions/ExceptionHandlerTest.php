@@ -14,4 +14,4 @@ it('should render UnableToDeleteModelException correctly for models', function (
         ->assertBadRequest();
 })->with([
     'User' => fn () => User::factory()->make(),
-])->only();
+]);
