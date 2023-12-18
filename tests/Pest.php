@@ -11,6 +11,7 @@
 |
 */
 
+use App\Exceptions\Handler;
 use function Pest\Laravel\assertSoftDeleted;
 
 uses(
@@ -54,4 +55,20 @@ expect()->extend('toBeSoftDeleted', function (\Carbon\Carbon $when = null) {
 function something()
 {
     // ..
+}
+
+function exceptionHandler(): Handler {
+    return app(Handler::class);
+}
+
+function renderException(Throwable $exception, \Illuminate\Http\Request $request = null): \Illuminate\Http\Response|\Illuminate\Http\JsonResponse|\Illuminate\Http\RedirectResponse|\Symfony\Component\HttpFoundation\Response|null
+{
+    try {
+        return exceptionHandler()->render(
+            $request ?: new \Illuminate\Http\Request(),
+            $exception
+        );
+    } catch (\Throwable) {
+        return null;
+    }
 }
