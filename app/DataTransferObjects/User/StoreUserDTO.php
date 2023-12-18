@@ -7,7 +7,7 @@ namespace App\DataTransferObjects\User;
 readonly class StoreUserDTO
 {
     public function __construct(
-        public string $userName,
+        public string $username,
         public string $firstName,
         public string $lastName,
         public string $email,

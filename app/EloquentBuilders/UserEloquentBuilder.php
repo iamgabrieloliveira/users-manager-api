@@ -12,6 +12,6 @@ class UserEloquentBuilder extends BaseEloquentBuilder
 
         return $this
             ->whereLike($fullName, $name)
-            ->orWhereLike('user_name', $name);
+            ->orWhereLike('username', $name);
     }
 }

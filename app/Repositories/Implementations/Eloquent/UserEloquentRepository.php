@@ -18,7 +18,7 @@ class UserEloquentRepository implements UserRepositoryContract
             'last_name'  => $DTO->lastName,
             'email'      => $DTO->email,
             'password'   => $DTO->password,
-            'user_name'  => $DTO->userName,
+            'username'  => $DTO->username,
         ]);
     }
 

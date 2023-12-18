@@ -85,7 +85,7 @@ it('should list all users matching USERNAME with the given search', function () 
     User::factory()
         ->sequence(
             ...array_map(
-                callback: fn (string $name) => ['user_name' => $name],
+                callback: fn (string $name) => ['username' => $name],
                 array: $allUsersUsernames
             )
         )->createMany(count($allUsersUsernames));
