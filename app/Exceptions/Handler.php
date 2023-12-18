@@ -48,9 +48,13 @@ class Handler extends ExceptionHandler
 
     private function handleValidationException(ValidationException $e): JsonResponse
     {
+        $errors = array_reduce($e->errors(), function (array $acc, array $error) {
+          return [...$acc, ...array_values($error)];
+        }, []);
+
         return response()->json([
             'message' => 'Validation Error',
-            'errors' => $e->errors(),
+            'errors' => $errors,
         ], HttpCode::HTTP_BAD_REQUEST);
     }
 
