@@ -5,8 +5,10 @@ declare(strict_types=1);
 namespace App\Http\Controllers;
 
 use App\Exceptions\UnableToDeleteModelException;
+use App\Http\Requests\IndexUserRequest;
 use App\Http\Requests\StoreUserRequest;
 use App\Models\User;
+use App\Resources\UserListResource;
 use App\Services\UserService;
 use Illuminate\Http\JsonResponse;
 
@@ -16,6 +18,15 @@ class UserController extends Controller
         private readonly UserService $userService,
     ) {
         //
+    }
+
+    public function index(IndexUserRequest $request): JsonResponse
+    {
+        $users = $this->userService->listUsers($request->getSearch());
+
+        return $this->ok([
+            'users' => UserListResource::collection($users),
+        ]);
     }
 
     public function store(StoreUserRequest $request): JsonResponse
