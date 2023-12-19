@@ -26,6 +26,7 @@ services:
       - database
     volumes:
       - .:/app
+      - ./xdebug.ini:/usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini
     working_dir: /app
     networks:
       - app
@@ -40,7 +41,6 @@ services:
       - app
     volumes:
       - ./localhost.conf:/etc/nginx/conf.d/default.conf
-      - ./xdebug.ini:/usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini
 volumes:
   db-data:
     driver: local
