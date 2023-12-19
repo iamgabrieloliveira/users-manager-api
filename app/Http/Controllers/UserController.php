@@ -9,7 +9,7 @@ use App\Http\Requests\IndexUserRequest;
 use App\Http\Requests\StoreUserRequest;
 use App\Http\Requests\UpdateUserRequest;
 use App\Models\User;
-use App\Resources\UserListResource;
+use App\Resources\UserResource;
 use App\Services\UserService;
 use Illuminate\Http\JsonResponse;
 
@@ -26,7 +26,7 @@ class UserController extends Controller
         $users = $this->userService->listUsers($request->getSearch());
 
         return $this->ok([
-            'users' => UserListResource::collection($users),
+            'users' => UserResource::collection($users),
         ]);
     }
 
@@ -46,6 +46,13 @@ class UserController extends Controller
         $user = $this->userService->update($user, $dto);
 
         return $this->noContent();
+    }
+
+    public function show(User $user): JsonResponse
+    {
+        return $this->ok([
+            'user' => UserResource::make($user),
+        ]);
     }
 
     /**
