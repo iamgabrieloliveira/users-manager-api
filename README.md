@@ -15,6 +15,9 @@ This repository contains an implementation of a user management API developed as
 
 - **Laravel Best Practices**: The implementation follows Laravel best practices, utilizing Json Resources for streamlined data transformation and Pest PHP for expressive and readable testing.
 
+
+- **Nginx Reverse Proxy and Docker**: The API is deployed using Docker containers, providing a consistent and portable environment. Nginx is utilized as a reverse proxy to efficiently handle incoming requests and distribute them to the appropriate Docker containers, ensuring optimal performance and scalability.
+
 ## Note on Frontend
 
 Due to personal circumstances, a complete frontend implementation was not feasible within the scope of this technical test. The developer chose to prioritize the quick delivery of the backend, emphasizing solid knowledge in Laravel and the ability to create robust and highly testable APIs.
@@ -26,7 +29,7 @@ The focus on the backend does not diminish the importance of the frontend but re
 ```bash
 > git clone https://github.com/iamgabrieloliveira/users-manager-api.git
 
-> cd CFP-Energy-Users-Manager
+> cd users-manager-api
 ```
 
 ### Step 2: Configure your environment variables
