@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Services;
 
 use App\DataTransferObjects\User\StoreUserDTO;
+use App\DataTransferObjects\User\UpdateUserDTO;
 use App\Exceptions\UnableToDeleteModelException;
 use App\Models\User;
 use App\Repositories\Contracts\UserRepositoryContract;
@@ -34,6 +35,11 @@ class UserService
     public function store(StoreUserDTO $DTO): User
     {
         return $this->userRepository->store($DTO);
+    }
+
+    public function update(User $user, UpdateUserDTO $DTO): User
+    {
+        return $this->userRepository->update($user, $DTO);
     }
 
     /**
