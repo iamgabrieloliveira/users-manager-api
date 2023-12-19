@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Repositories\Implementations\Eloquent;
 
 use App\DataTransferObjects\User\StoreUserDTO;
+use App\DataTransferObjects\User\UpdateUserDTO;
 use App\Models\User;
 use App\Repositories\Contracts\UserRepositoryContract;
 use Illuminate\Database\Eloquent\Collection;
@@ -18,8 +19,15 @@ class UserEloquentRepository implements UserRepositoryContract
             'last_name'  => $DTO->lastName,
             'email'      => $DTO->email,
             'password'   => $DTO->password,
-            'username'  => $DTO->username,
+            'username'   => $DTO->username,
         ]);
+    }
+
+    public function update(User $user, UpdateUserDTO $DTO): User
+    {
+        $user->query()->update($DTO->toArray());
+
+        return $user;
     }
 
     public function delete(User $user): bool
