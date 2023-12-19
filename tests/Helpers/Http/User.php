@@ -23,6 +23,11 @@ function update(int $userId, array $payload = []): TestResponse
     return put(route('api.user.update', ['user' => $userId]), $payload);
 }
 
+function show(int $userId): TestResponse
+{
+    return get(route('api.user.show', ['user' => $userId]));
+}
+
 function destroy(int $userId): TestResponse
 {
     return delete(route('api.user.destroy', ['user' => $userId]));
