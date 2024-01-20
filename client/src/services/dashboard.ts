@@ -17,7 +17,7 @@ export type UserData = {
     email: string;
 }
 
-type UpdateUserRequesyPayload = {
+type UpdateUserRequestPayload = {
     username: string;
     email: string;
     first_name: string;
@@ -25,11 +25,16 @@ type UpdateUserRequesyPayload = {
 }
 
 type ListUserResponse = PaginationData & {
-    users: UserData;
+    users: UserData[];
+}
+
+type ListUserParams = {
+    page: number,
+    q?: string,
 }
 
 export async function listUsers(page: number = 1, search?: string): Promise<ListUserResponse> {
-    const params = { page };
+    const params: ListUserParams = { page };
 
     if (search) {
         params.q = search;
@@ -43,6 +48,6 @@ export function deleteUser(userId: number) {
     return api.delete(`user/${userId}`);
 }
 
-export function updateUser(userId: number, payload: UpdateUserRequesyPayload) {
+export function updateUser(userId: number, payload: UpdateUserRequestPayload) {
     return api.put(`user/${userId}`, payload);
 }

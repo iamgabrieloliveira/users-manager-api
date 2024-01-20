@@ -17,19 +17,28 @@ import EditUserModal, { UserPayload } from '@/components/modals/EditUserModal';
 import { AuthContext } from '@/contexts/AuthContext';
 import { Input } from '@nextui-org/react';
 import useDebounce from '@/hooks/useDebounce';
+import { SearchIcon } from '@nextui-org/shared-icons';
+
+const initialPaginationState = {
+    current_page: 1,
+    last_page: 1,
+    next_page_url: null,
+    total: 0,
+};
 
 export default function Page() {
-    const { user: loggedUser, setUser: setLoggedUser } = useContext(AuthContext);
+    const { user, setUser: setLoggedUser } = useContext(AuthContext);
+    const loggedUser = user!;
 
     const [users, setUsers] = useState<UserData[]>([]);
     const [action, setAction] = useState<Action | null>(null);
     const [isLoading, setIsLoading] = useState(false);
-    const [pagination, setPagination] = useState<PaginationData['pagination']>([]);
+    const [pagination, setPagination] = useState<PaginationData['pagination']>(initialPaginationState);
     const [search, setSearch] = useState<string>('');
 
     const debouncedSearch = useDebounce(search, 500);
 
-    const [selectedUserId, setSelectedUserId] = useState<number | null>(null);
+    const [selectedUserId, setSelectedUserId] = useState<number | undefined>(undefined);
 
     function listUsers(page: number = 1) {
         setIsLoading(true);
@@ -42,13 +51,10 @@ export default function Page() {
             });
     }
     
-    useEffect(() => {
-        listUsers();
-    }, [debouncedSearch]);
-
-    function onChangePage(page: number) {
-        listUsers(page);
-    }
+    useEffect(
+        () => listUsers(),
+        [debouncedSearch]
+    );
 
     function onAction(action: Action, userId: number) {
         if (action === 'delete' && userId === loggedUser.id) {
@@ -60,47 +66,49 @@ export default function Page() {
         setSelectedUserId(userId);
     }
     
-    function resetAction() {
+    function clearActionState() {
         setAction(null);
-        setSelectedUserId(null);
-    }
-
-    function onCloseModal() {
-        resetAction();
+        setSelectedUserId(undefined);
     }
 
     function handleDeleteUser() {
+        if (!selectedUserId) return;
+
         deleteUserRequest(selectedUserId)
             .then(() => {
                 toast.success('User deleted successfully');
-                resetAction();
+                clearActionState();
             }).catch((err) => {
                 handleErrorWithToast(err);
             });
     }
 
     function handleEditUser({ username, email, lastName, firstName }: UserPayload) {
-        updateUserRequest(selectedUserId, {
+        if (!selectedUserId) return;
+
+        const payload = {
             username,
             email,
             first_name: firstName,
             last_name: lastName,
-        })
+        };
+
+        updateUserRequest(selectedUserId, payload)
             .then(() => {
                 toast.success('User updated successfully');
 
                 if (selectedUserId === loggedUser.id) {
-                    setLoggedUser(currentUser => ({
-                        ...currentUser,
+                    setLoggedUser({
+                        id: loggedUser.id,
                         username,
                         email,
                         firstName,
                         lastName,
-                    }));
+                    });
                 }
 
-                resetAction();
-                onChangePage(pagination.current_page);
+                clearActionState();
+                listUsers(pagination.current_page);
             }).catch((err) => {
                 handleErrorWithToast(err);
             });
@@ -109,31 +117,33 @@ export default function Page() {
     return (
         <Wrapper>
             <Input
+                startContent={<SearchIcon className="text-default-300" />}
                 onChange={(event) => setSearch(event.target.value)}
-                className="mb-5" placeholder={'search by name'}/>
+                className="mb-5" placeholder={'Search by name...'}
+            />
             <UsersTable
                 onAction={onAction}
                 lastPage={pagination?.last_page}
-                onChangePage={onChangePage}
+                onChangePage={(page) => listUsers(page)}
                 users={users}
                 isPaginationDisabled={isLoading}
             />
             <DeleteUserModal
                 isOpen={action === 'delete'}
                 onConfirm={handleDeleteUser}
-                onClose={onCloseModal}
+                onClose={clearActionState}
             />
             <EditUserModal
                 isOpen={action === 'edit'}
                 userId={selectedUserId}
                 onSave={handleEditUser}
-                onClose={onCloseModal}
+                onClose={clearActionState}
             />
             <EditUserModal
                 isOpen={action === 'details'}
                 readonly
                 userId={selectedUserId}
-                onClose={onCloseModal}
+                onClose={clearActionState}
             />
         </Wrapper>
     );

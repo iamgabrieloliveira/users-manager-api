@@ -14,7 +14,7 @@ import useJwt from '@/services/jwt';
 import toast from 'react-hot-toast';
 import Loading from '@/components/Loading';
 import { handleErrorWithToast } from '@/services/api';
-import {useRouter} from "next/dist/client/components/navigation";
+import { useRouter } from 'next/dist/client/components/navigation';
 
 type User = {
     id: number,
@@ -25,11 +25,12 @@ type User = {
 }
 
 type AuthContextData = {
-    isAuthenticated: false,
-    user: User,
-    signIn: (data: SignInRequestData) => Promise<void>,
-    signUp: (data: SignUpRequestData) => Promise<void>,
-    setUser: (user: User) => void,
+    isAuthenticated: boolean;
+    user: User | null;
+    signIn: (data: SignInRequestData) => Promise<void>;
+    signUp: (data: SignUpRequestData) => Promise<void>;
+    signOut: () => Promise<void>;
+    setUser: (user: User) => void;
 }
 
 const PUBLIC_ROUTES = [
@@ -86,6 +87,7 @@ export function AuthProvider({ children }) {
         );
 
         setUser({
+            id: user.id,
             username: user.username,
             firstName: user.first_name,
             lastName: user.last_name,

@@ -14,11 +14,14 @@ export type SignUpRequestData = {
 }
 
 type SignInResponse = {
-    id: number,
-    username: string,
-    first_name: string,
-    last_name: string,
-    email: string,
+    token: string,
+    user: {
+        id: number,
+        username: string,
+        first_name: string,
+        last_name: string,
+        email: string,
+    }
 }
 
 type SignUpResponse = {

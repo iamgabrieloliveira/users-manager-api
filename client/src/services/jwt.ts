@@ -1,7 +1,7 @@
 import { parseCookies, setCookie, destroyCookie } from 'nookies';
 
 type UseJwt = {
-    setJwt: (value: string) => void;
+    setJwt: (value: string, maxAge: number) => void;
     getJwt: () => string|undefined;
     forgetJwt: () => void;
 }
@@ -18,6 +18,7 @@ export default function useJwt(): UseJwt {
     
     function getJwt(): string|undefined {
         const cookieName = process.env.JWT_TOKEN_NAME;
+
         const cookies = parseCookies();
         return cookies[cookieName];
     }
