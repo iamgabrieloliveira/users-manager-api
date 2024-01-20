@@ -1,4 +1,4 @@
-version: '3.8'
+version: "3.8"
 
 services:
   database:
@@ -41,6 +41,17 @@ services:
       - app
     volumes:
       - ./localhost.conf:/etc/nginx/conf.d/default.conf
+
+  frontend:
+    image: "node"
+    container_name: frontend
+    volumes:
+      - "./client-next:/var/www/html"
+    working_dir: "/var/www/html"
+    ports:
+      - "3000:3000"
+    command: bash -c "npm install && npm run dev"
+
 volumes:
   db-data:
     driver: local
