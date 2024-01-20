@@ -2,6 +2,7 @@
 
 declare(strict_types=1);
 
+use App\Http\Controllers\AuthenticationController;
 use App\Http\Controllers\UserController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -21,4 +22,14 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
 
-Route::apiResource('user', UserController::class);
+Route::prefix('auth')->group(function () {
+    Route::post('login', [AuthenticationController::class, 'authenticate']);
+    Route::get('me', [AuthenticationController::class, 'me']);
+    Route::post('logout', [AuthenticationController::class, 'logout']);
+});
+
+Route::middleware(['middleware' => 'auth:api'])
+    ->apiResource('user', UserController::class)->except('store');
+
+Route::post('user', [UserController::class, 'store'])->name('user.store');
+

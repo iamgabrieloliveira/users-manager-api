@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers;
 
+use App\EloquentBuilders\UserEloquentBuilder;
 use App\Exceptions\UnableToDeleteModelException;
 use App\Http\Requests\IndexUserRequest;
 use App\Http\Requests\StoreUserRequest;
@@ -23,10 +24,14 @@ class UserController extends Controller
 
     public function index(IndexUserRequest $request): JsonResponse
     {
-        $users = $this->userService->listUsers($request->getSearch());
+        $data = User::query()
+            ->when(
+                $request->getSearch() ?? false,
+                fn (UserEloquentBuilder $builder) => $builder->filterByName($request->getSearch()),
+            )->paginate();
 
-        return $this->ok([
-            'users' => UserResource::collection($users),
+        return $this->paginated($data, [
+            'users' => UserResource::collection($data->items()),
         ]);
     }
 

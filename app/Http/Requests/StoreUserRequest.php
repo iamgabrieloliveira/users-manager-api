@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Http\Requests;
 
 use App\DataTransferObjects\User\StoreUserDTO;
+use Illuminate\Validation\Rule;
 use App\Rules\{PasswordLengthRule, UsernameLengthRule};
 use Illuminate\Foundation\Http\FormRequest;
 
@@ -13,11 +14,11 @@ class StoreUserRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'username'  => ['required', new UsernameLengthRule()],
+            'username' => ['required', new UsernameLengthRule()],
             'first_name' => ['required'],
-            'last_name'  => ['required'],
-            'email'      => ['required', 'email'],
-            'password'   => ['required', new PasswordLengthRule],
+            'last_name' => ['required'],
+            'email' => ['required', 'email', Rule::unique('users', 'email')->whereNull('deleted_at')],
+            'password' => ['required', new PasswordLengthRule],
         ];
     }
 

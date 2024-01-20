@@ -10,6 +10,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
+use Tymon\JWTAuth\Contracts\JWTSubject;
 
 /**
  * App\Models\User
@@ -40,7 +41,7 @@ use Laravel\Sanctum\HasApiTokens;
  * @method static UserEloquentBuilder|User whereUserName($value)
  * @mixin \Eloquent
  */
-class User extends Authenticatable
+class User extends Authenticatable implements JWTSubject
 {
     use HasApiTokens, HasFactory, Notifiable, SoftDeletes;
 
@@ -63,5 +64,15 @@ class User extends Authenticatable
     public function newEloquentBuilder($query): UserEloquentBuilder
     {
         return new UserEloquentBuilder($query);
+    }
+
+    public function getJWTIdentifier(): int
+    {
+        return $this->getKey();
+    }
+
+    public function getJWTCustomClaims(): array
+    {
+        return [];
     }
 }

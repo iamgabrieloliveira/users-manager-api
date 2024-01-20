@@ -8,7 +8,9 @@ use App\Repositories\Contracts\UserRepositoryContract;
 use App\Repositories\Implementations\Eloquent\UserEloquentRepository;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Support\ServiceProvider;
+use Illuminate\Support\Str;
 use Illuminate\Testing\TestResponse;
 
 class AppServiceProvider extends ServiceProvider
@@ -28,6 +30,8 @@ class AppServiceProvider extends ServiceProvider
     {
         Model::preventLazyLoading(! app()->isProduction());
 
+        JsonResource::withoutWrapping();
+
         $this->bindMacros();
     }
 
@@ -41,6 +45,12 @@ class AppServiceProvider extends ServiceProvider
                 return TestResponse::fromBaseResponse($response);
             }
         );
+
+        Str::macro(
+            name: 'isEmail',
+            macro: fn (string $text): bool => (bool) filter_var($text, FILTER_VALIDATE_EMAIL)
+        );
+
     }
 
     private function bindRepositories(): void
