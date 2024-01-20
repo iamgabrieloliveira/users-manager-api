@@ -46,7 +46,7 @@ services:
     image: "node"
     container_name: frontend
     volumes:
-      - "./client-next:/var/www/html"
+      - "./client:/var/www/html"
     working_dir: "/var/www/html"
     ports:
       - "3000:3000"

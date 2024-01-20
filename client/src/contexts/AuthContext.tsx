@@ -9,11 +9,12 @@ import {
     SignUpRequestData,
     recoverAuthenticatedUserInfo
 } from '@/services/auth';
-import { usePathname, redirect } from 'next/navigation';
+import { usePathname } from 'next/navigation';
 import useJwt from '@/services/jwt';
 import toast from 'react-hot-toast';
 import Loading from '@/components/Loading';
 import { handleErrorWithToast } from '@/services/api';
+import {useRouter} from "next/dist/client/components/navigation";
 
 type User = {
     id: number,
@@ -41,9 +42,11 @@ const isPathPublic = (pathname: string) => PUBLIC_ROUTES.includes(pathname);
 export const AuthContext = createContext({} as AuthContextData);
 
 export function AuthProvider({ children }) {
+    const router = useRouter();
+    const pathname = usePathname();
+
     const [user, setUser] = useState<User | null>(null);
     const [isLoading, setIsLoading] = useState<boolean>(true);
-    const pathname = usePathname();
 
     const { getJwt, setJwt, forgetJwt } = useJwt();
 
@@ -88,7 +91,7 @@ export function AuthProvider({ children }) {
             lastName: user.last_name,
             email: user.email,
         });
-        redirect('/dashboard');
+        router.push('/dashboard');
     }
 
     async function signUp({ username, firstName, lastName, email, password }: SignUpRequestData) {
@@ -101,13 +104,16 @@ export function AuthProvider({ children }) {
         });
 
         toast.success('Account created successfully, please login');
-        redirect('/');
+        router.push('/');
     }
 
     async function signOut() {
         await signOutRequest();
+
         forgetJwt();
-        redirect('/');
+        setUser(null);
+
+        router.push('/');
     }
 
     const page = (
@@ -119,10 +125,10 @@ export function AuthProvider({ children }) {
     if (isLoading) return <Loading/>;
 
     if (isPathPublic(pathname)) {
-        return isAuthenticated ? redirect('/dashboard') : page;
+        return isAuthenticated ? router.push('/dashboard') : page;
     }
 
-    if (!isAuthenticated) return redirect('/');
+    if (!isAuthenticated) return router.push('/');
 
     return page;
 }
