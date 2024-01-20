@@ -1,0 +1,15 @@
+{
+  "extends": [
+    "next/core-web-vitals",
+    "plugin:@typescript-eslint/recommended",
+    "plugin:import/recommended"
+  ],
+  "rules": {
+    "object-curly-spacing": ["error", "always"],
+    "quotes": ["error", "single"],
+    "semi": ["error", "always"],
+    "indent": ["error", 4],
+    "arrow-body-style": ["error", "as-needed"],
+    "eol-last": ["error", "always"]
+  }
+}
