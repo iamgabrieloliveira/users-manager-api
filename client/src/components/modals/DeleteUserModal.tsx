@@ -1,34 +1,17 @@
-import { Button, Modal, ModalBody, ModalContent, ModalFooter, ModalHeader } from '@nextui-org/react';
+import ConfirmationDialog, { type ConfirmationDialogProps } from '@/components/dialogs/ConfirmationDialog';
 
-type DeleteUserModalProps = {
-    isOpen: boolean,
-    onClose: () => void,
-    onConfirm: () => void,
-}
+type DeleteUserDialogProps = Omit<ConfirmationDialogProps, 'body'>;
 
-export default function DeleteUserModal({ onClose, onConfirm, isOpen }: DeleteUserModalProps) {
+export default function DeleteUserModal(props: DeleteUserDialogProps) {
     return (
-        <Modal isOpen={isOpen} onClose={onClose}>
-            <ModalContent>
-                {(onClose) => (
-                    <>
-                        <ModalHeader className="flex flex-col gap-1">Are you sure?</ModalHeader>
-                        <ModalBody>
-                            <p>
-                                Are you sure you want to delete this user account? This action cannot be undone.
-                            </p>
-                        </ModalBody>
-                        <ModalFooter>
-                            <Button color="danger" variant="light" onPress={onClose}>
-                                Go back
-                            </Button>
-                            <Button onClick={onConfirm} color="primary" onPress={onClose}>
-                                Confirm
-                            </Button>
-                        </ModalFooter>
-                    </>
-                )}
-            </ModalContent>
-        </Modal>
+        <ConfirmationDialog
+            {...props}
+            body={
+                <p>
+                    Are you sure you want to delete this user account? This action cannot be undone.
+                </p>
+            }
+        >
+        </ConfirmationDialog>
     );
 }
