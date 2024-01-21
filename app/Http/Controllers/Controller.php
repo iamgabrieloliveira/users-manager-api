@@ -31,7 +31,12 @@ class Controller extends BaseController
       return response()->json($data, Response::HTTP_OK);
     }
 
-    public function withErrors(array $errors, int $statusCode = Response::HTTP_FORBIDDEN): JsonResponse
+    public function notFound(array|string $errors): JsonResponse
+    {
+        return $this->withErrors($errors, Response::HTTP_NOT_FOUND);
+    }
+
+    public function withErrors(array|string $errors, int $statusCode = Response::HTTP_FORBIDDEN): JsonResponse
     {
         return response()->json(['errors' => $errors], $statusCode);
     }

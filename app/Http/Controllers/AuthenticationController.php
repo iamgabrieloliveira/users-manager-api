@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Http\Controllers;
 
 use App\Http\Requests\AuthenticateUserRequest;
+use App\Http\Requests\ImpersonateUserRequest;
 use App\Models\User;
 use App\Resources\UserResource;
 use Illuminate\Http\JsonResponse;
@@ -52,5 +53,20 @@ class AuthenticationController extends Controller
         auth()->logout();
 
         return $this->noContent();
+    }
+
+    public function impersonate(ImpersonateUserRequest $request): JsonResponse
+    {
+        $user = User::query()->find($request->getUserId());
+
+        if ($user === null) {
+            return $this->notFound('Selected user for impersonate does not exist');
+        }
+
+        auth()->logout();
+
+        $token = auth()->login($user);
+
+        return $this->ok(['token' => $token]);
     }
 }

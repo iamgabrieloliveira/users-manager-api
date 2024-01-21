@@ -26,6 +26,9 @@ Route::prefix('auth')->group(function () {
     Route::post('login', [AuthenticationController::class, 'authenticate']);
     Route::get('me', [AuthenticationController::class, 'me']);
     Route::post('logout', [AuthenticationController::class, 'logout']);
+
+    Route::post('impersonate', [AuthenticationController::class, 'impersonate'])
+        ->middleware(['middleware' => 'auth:api']);
 });
 
 Route::middleware(['middleware' => 'auth:api'])
