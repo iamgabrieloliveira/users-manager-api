@@ -2,7 +2,7 @@
 
 import Wrapper from '@/components/dashboard/Wrapper';
 import UsersTable, { Action } from '@/components/UsersTable';
-import React, { useContext, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import {
     deleteUser as deleteUserRequest,
     listUsers as listUsersRequest,
@@ -50,6 +50,8 @@ export default function Page() {
                 setIsLoading(false);
             });
     }
+
+    useEffect(() => listUsers(), []);
 
     function onAction(action: Action, userId: number) {
         if (action === 'delete' && userId === loggedUser.id) {
@@ -142,7 +144,7 @@ export default function Page() {
                 lastPage={pagination?.last_page}
                 onChangePage={(page) => listUsers(page)}
                 users={users}
-                isPaginationDisabled={isLoading}
+                isLoading={isLoading}
             />
             <DeleteUserModal
                 isOpen={action === 'delete'}

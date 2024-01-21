@@ -2,6 +2,7 @@
 
 import { Pagination, Table, TableBody, TableCell, TableColumn, TableHeader, TableRow, Tooltip } from '@nextui-org/react';
 import { DeleteIcon, AvatarIcon, EditIcon, EyeIcon } from '@nextui-org/shared-icons';
+import { Spinner } from '@nextui-org/spinner';
 
 export type Action = 'details' | 'edit' | 'delete' | 'impersonate';
 
@@ -18,14 +19,14 @@ type UsersTableProps = {
     lastPage: number;
     onAction: (action: Action, userId: number) => void,
     onChangePage: (page: number) => void;
-    isPaginationDisabled: boolean,
+    isLoading: boolean,
 }
 
-export default function UsersTable({ users, onChangePage, isPaginationDisabled, lastPage, onAction }: UsersTableProps) {
+export default function UsersTable({ users, onChangePage, isLoading, lastPage, onAction }: UsersTableProps) {
     return (
         <Table isStriped bottomContent={
             <Pagination
-                isDisabled={isPaginationDisabled}
+                isDisabled={isLoading}
                 onChange={onChangePage}
                 total={lastPage}
             />
@@ -37,7 +38,8 @@ export default function UsersTable({ users, onChangePage, isPaginationDisabled, 
                 <TableColumn>Email</TableColumn>
                 <TableColumn align="center"/>
             </TableHeader>
-            <TableBody emptyContent={'List is empty'}>
+            {/* todo(iamgabrieloliveira): refactor to use isLoading and loadingContext props, I got some using this */}
+            <TableBody emptyContent={ isLoading ? <Spinner label="Loading..."/> : 'List is empty'}>
                 {
                     users.map((user) => (
                         <TableRow key={user.id}>
