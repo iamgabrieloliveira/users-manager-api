@@ -2,7 +2,7 @@
 
 import Wrapper from '@/components/dashboard/Wrapper';
 import UsersTable, { Action } from '@/components/UsersTable';
-import { useContext, useEffect, useState } from 'react';
+import React, { useContext, useState } from 'react';
 import {
     deleteUser as deleteUserRequest,
     listUsers as listUsersRequest,
@@ -10,14 +10,16 @@ import {
     PaginationData,
     UserData
 } from '@/services/dashboard';
-import { handleErrorWithToast } from '@/services/api';
+import { api, handleErrorWithToast } from '@/services/api';
 import toast from 'react-hot-toast';
 import DeleteUserModal from '@/components/modals/DeleteUserModal';
 import EditUserModal, { UserPayload } from '@/components/modals/EditUserModal';
 import { AuthContext } from '@/contexts/AuthContext';
-import { Input } from '@nextui-org/react';
-import useDebounce from '@/hooks/useDebounce';
 import { SearchIcon } from '@nextui-org/shared-icons';
+import DebouncedInput from '@/components/form/DebouncedInput';
+import ImpersonateConfirmationModal from '@/components/modals/ImpersonateConfirmationModal';
+import useJwt from '@/services/jwt';
+import { impersonate } from '@/services/auth';
 
 const initialPaginationState = {
     current_page: 1,
@@ -27,6 +29,7 @@ const initialPaginationState = {
 };
 
 export default function Page() {
+    const { setJwt } = useJwt();
     const { user, setUser: setLoggedUser } = useContext(AuthContext);
     const loggedUser = user!;
 
@@ -34,13 +37,10 @@ export default function Page() {
     const [action, setAction] = useState<Action | null>(null);
     const [isLoading, setIsLoading] = useState(false);
     const [pagination, setPagination] = useState<PaginationData['pagination']>(initialPaginationState);
-    const [search, setSearch] = useState<string>('');
-
-    const debouncedSearch = useDebounce(search, 500);
 
     const [selectedUserId, setSelectedUserId] = useState<number | undefined>(undefined);
 
-    function listUsers(page: number = 1) {
+    function listUsers(page: number = 1, search?: string) {
         setIsLoading(true);
         listUsersRequest(page, search)
             .then(({ users, pagination }) => {
@@ -50,11 +50,6 @@ export default function Page() {
                 setIsLoading(false);
             });
     }
-    
-    useEffect(
-        () => listUsers(),
-        [debouncedSearch]
-    );
 
     function onAction(action: Action, userId: number) {
         if (action === 'delete' && userId === loggedUser.id) {
@@ -69,6 +64,25 @@ export default function Page() {
     function clearActionState() {
         setAction(null);
         setSelectedUserId(undefined);
+    }
+    
+    function handleImpersonate() {
+        if (!selectedUserId) return;
+
+        if (selectedUserId === loggedUser.id) {
+            toast.error('You already are logged as this user');
+            return;
+        }
+
+        impersonate(selectedUserId)
+            .then((token) => {
+                setJwt(token, '1 hour');
+                window.location.reload();
+
+                toast.success(`Now you\'re logged as ${loggedUser.username}`);
+            }).catch((err) => {
+                handleErrorWithToast(err);
+            });
     }
 
     function handleDeleteUser() {
@@ -116,10 +130,12 @@ export default function Page() {
 
     return (
         <Wrapper>
-            <Input
-                startContent={<SearchIcon className="text-default-300" />}
-                onChange={(event) => setSearch(event.target.value)}
-                className="mb-5" placeholder={'Search by name...'}
+            <DebouncedInput
+                className="mb-5"
+                placeholder="Search by username, first name or last name"
+                delay={500}
+                icon={<SearchIcon/>}
+                onStopTyping={(search) => listUsers(1, search)}
             />
             <UsersTable
                 onAction={onAction}
@@ -144,6 +160,11 @@ export default function Page() {
                 readonly
                 userId={selectedUserId}
                 onClose={clearActionState}
+            />
+            <ImpersonateConfirmationModal
+                isOpen={action === 'impersonate'}
+                onClose={clearActionState}
+                onConfirm={handleImpersonate}
             />
         </Wrapper>
     );
