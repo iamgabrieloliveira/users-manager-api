@@ -73,18 +73,13 @@ export function AuthProvider({ children }) {
                 });
             }).catch((err) => {
                 handleErrorWithToast(err);
-            })
-            .finally(() => setIsLoading(false));
+            }).finally(() => setIsLoading(false));
     }, []);
 
     async function signIn({ email, password }: SignInRequestData) {
-        // eslint-disable-next-line react-hooks/rules-of-hooks
         const { token, user } = await signInRequest({ email, password });
 
-        setJwt(
-            token,
-            60 * 60 // 1 hour
-        );
+        setJwt(token, '1 hour');
 
         setUser({
             id: user.id,
