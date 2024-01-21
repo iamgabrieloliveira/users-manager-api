@@ -22,6 +22,9 @@ const handleErrorWithToast = (error) => {
     const toastUnknownError = () => toast.error('An error occurred, please refresh your page');
 
     if (!error instanceof AxiosError) {
+        if (process.env.NODE_ENV === 'development') {
+            console.error(error);
+        }
         toastUnknownError();
         return error;
     }
