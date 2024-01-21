@@ -1,9 +1,9 @@
 'use client';
 
 import { Pagination, Table, TableBody, TableCell, TableColumn, TableHeader, TableRow, Tooltip } from '@nextui-org/react';
-import { DeleteIcon, EditIcon, EyeIcon } from '@nextui-org/shared-icons';
+import { DeleteIcon, AvatarIcon, EditIcon, EyeIcon } from '@nextui-org/shared-icons';
 
-export type Action = 'details' | 'edit' | 'delete';
+export type Action = 'details' | 'edit' | 'delete' | 'impersonate';
 
 type User = {
     id: number,
@@ -47,15 +47,21 @@ export default function UsersTable({ users, onChangePage, isPaginationDisabled, 
                             <TableCell>{user.email}</TableCell>
                             <TableCell>
                                 <div className="relative flex items-center gap-2">
+                                    <Tooltip content="Impersonate">
+                                        <span onClick={() => onAction('impersonate', user.id)}
+                                            className="text-lg text-zinc-500 cursor-pointer active:opacity-50">
+                                            <AvatarIcon/>
+                                        </span>
+                                    </Tooltip>
                                     <Tooltip content="Details">
                                         <span onClick={() => onAction('details', user.id)}
-                                            className="text-lg text-default-400 cursor-pointer active:opacity-50">
+                                            className="text-lg text-blue-600 cursor-pointer active:opacity-50">
                                             <EyeIcon/>
                                         </span>
                                     </Tooltip>
                                     <Tooltip content="Edit user">
                                         <span onClick={() => onAction('edit', user.id)}
-                                            className="text-lg text-default-400 cursor-pointer active:opacity-50">
+                                            className="text-lg text-zinc-600 cursor-pointer active:opacity-50">
                                             <EditIcon/>
                                         </span>
                                     </Tooltip>
