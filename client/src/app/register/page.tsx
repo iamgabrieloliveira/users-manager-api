@@ -47,7 +47,7 @@ export default function Register() {
                     <form className="space-y-6" onSubmit={handleSubmit(handleSignUp)}>
 
                         <div>
-                            <label htmlFor="email" className="block text-sm font-medium leading-6 text-gray-900">
+                            <label htmlFor="email" className="required block text-sm font-medium leading-6 text-gray-900">
                                Username
                             </label>
                             <div className="mt-2">
@@ -63,7 +63,7 @@ export default function Register() {
                         </div>
 
                         <div>
-                            <label htmlFor="email" className="block text-sm font-medium leading-6 text-gray-900">
+                            <label htmlFor="email" className="block required text-sm font-medium leading-6 text-gray-900">
                                 First name
                             </label>
                             <div className="mt-2">
@@ -79,7 +79,7 @@ export default function Register() {
                         </div>
 
                         <div>
-                            <label htmlFor="email" className="block text-sm font-medium leading-6 text-gray-900">
+                            <label htmlFor="email" className="required block text-sm font-medium leading-6 text-gray-900">
                                 Last name
                             </label>
                             <div className="mt-2">
@@ -95,7 +95,7 @@ export default function Register() {
                         </div>
 
                         <div>
-                            <label htmlFor="email" className="block text-sm font-medium leading-6 text-gray-900">
+                            <label htmlFor="email" className="required block text-sm font-medium leading-6 text-gray-900">
                                 Email address
                             </label>
                             <div className="mt-2">
@@ -113,7 +113,7 @@ export default function Register() {
 
                         <div>
                             <div className="flex items-center justify-between">
-                                <label htmlFor="password" className="block text-sm font-medium leading-6 text-gray-900">
+                                <label htmlFor="password" className="required block text-sm font-medium leading-6 text-gray-900">
                                     Password
                                 </label>
                             </div>
