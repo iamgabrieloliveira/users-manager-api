@@ -1,4 +1,4 @@
-import Spinner from '@/components/icons/Spinner';
+import { Spinner } from '@nextui-org/spinner';
 
 export default function Loading() {
     return (
