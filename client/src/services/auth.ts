@@ -60,6 +60,11 @@ export function signOut() {
     return api.post('auth/logout');
 }
 
+export async function impersonate(userId: number): Promise<string> {
+    const { data } = await api.post<{ token: string }>('auth/impersonate', { user_id: userId });
+    return data.token;
+}
+
 export async function recoverAuthenticatedUserInfo(): Promise<RecoverAuthenticatedUserInfoResponse> {
     const response = await api.get<RecoverAuthenticatedUserInfoResponse>('auth/me');
     return response.data;
