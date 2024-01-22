@@ -4,11 +4,13 @@ import useDebounce from '@/hooks/useDebounce';
 
 type DebouncedInputProps = InputProps & {
     delay: number;
+    initialValue: string | null;
     icon?: React.ReactNode;
     onStopTyping: (content: string) => void;
+    onChange: (content: string) => void;
 };
 
-export default function DebouncedInput({ onStopTyping, delay, icon, ...rest }: DebouncedInputProps) {
+export default function DebouncedInput({ onStopTyping, onChange, delay, icon, initialValue, ...rest }: DebouncedInputProps) {
     const [inputValue, setInputValue] = useState<string | null>(null);
 
     const debounced = useDebounce(inputValue, delay);
@@ -23,7 +25,13 @@ export default function DebouncedInput({ onStopTyping, delay, icon, ...rest }: D
         <Input
             {...rest}
             startContent={icon}
-            onChange={(event) => setInputValue(event.target.value)}
+            value={initialValue}
+            onChange={(event) => {
+                const content = event.target.value;
+
+                setInputValue(content);
+                onChange(content);
+            }}
         />
     );
 }
