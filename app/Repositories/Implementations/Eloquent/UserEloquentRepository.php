@@ -25,7 +25,7 @@ class UserEloquentRepository implements UserRepositoryContract
 
     public function update(User $user, UpdateUserDTO $DTO): User
     {
-        $user->query()->update($DTO->toArray());
+        $user->update($DTO->toArray());
 
         return $user;
     }

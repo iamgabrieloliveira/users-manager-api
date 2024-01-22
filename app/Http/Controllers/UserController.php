@@ -48,7 +48,7 @@ class UserController extends Controller
     {
         $dto = $request->getDTO();
 
-        $user = $this->userService->update($user, $dto);
+        $this->userService->update($user, $dto);
 
         return $this->noContent();
     }
