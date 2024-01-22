@@ -113,7 +113,7 @@ This repository contains an implementation of a user management API developed as
 
 ### Step 6: Access frontend: 
 
-The project will be running at: http://localhost::3000
+The project will be running at: http://localhost:3000
 
 
 
