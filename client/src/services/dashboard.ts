@@ -51,3 +51,15 @@ export function deleteUser(userId: number) {
 export function updateUser(userId: number, payload: UpdateUserRequestPayload) {
     return api.put(`user/${userId}`, payload);
 }
+
+type UserInfo = {
+    email: string,
+    username: string;
+    first_name: string;
+    last_name: string;
+}
+
+export async function loadUserInfo(userId: number): Promise<UserInfo> {
+    const { data } = await api.get<{ user: UserInfo }>(`user/${userId}`);
+    return data.user;
+}

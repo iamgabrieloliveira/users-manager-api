@@ -8,7 +8,8 @@ import {
     ModalHeader,
 } from '@nextui-org/react';
 import { useEffect, useState } from 'react';
-import { api } from '@/services/api';
+import { handleErrorWithToast } from '@/services/api';
+import { loadUserInfo } from '@/services/dashboard';
 
 export type UserPayload = {
     username: string,
@@ -17,13 +18,25 @@ export type UserPayload = {
     email: string,
 }
 
-type EditUserModalProps = {
+type BaseEditUserModalProps = {
     isOpen: boolean;
-    readonly?: boolean;
-    onClose: () => void;
     userId?: number,
-    onSave?: (data: UserPayload) => void;
+    onClose: () => void;
 }
+
+type ReadonlyModalProps = {
+    readonly: true;
+    onSave: undefined;
+}
+
+type InteractiveModalProps = {
+    readonly: false;
+    onSave: (data: UserPayload) => void;
+}
+
+// to explicitly tells to the compiler when readonly is false onSave must be given
+type EditUserModalProps = BaseEditUserModalProps & ReadonlyModalProps
+    | BaseEditUserModalProps & InteractiveModalProps;
 
 const formInitialState = {
     email: '',
@@ -36,24 +49,28 @@ export default function EditUserModal({ isOpen, userId, onClose, onSave, readonl
     const [form, setForm] = useState<UserPayload>(formInitialState);
     const [isLoading, setIsLoading] = useState(false);
 
+    function handleSave() {
+        if (!readonly) {
+            onSave(form);
+        }
+
+        onClose();
+    }
+
     useEffect(() => {
         if (!userId) return;
 
-        setForm(formInitialState);
-
-        (async () => {
-            setIsLoading(true);
-            const { data: { user } } = await api.get(`user/${userId}`);
-
-            setForm({
-                email: user.email,
-                username: user.username,
-                firstName: user.first_name,
-                lastName: user.last_name,
-            });
-            setIsLoading(false);
-        })();
-
+        loadUserInfo(userId)
+            .then((user) => {
+                setForm({
+                    email: user.email,
+                    username: user.username,
+                    firstName: user.first_name,
+                    lastName: user.last_name,
+                });
+            }).catch((err) => {
+                handleErrorWithToast(err);
+            }).finally(() => setIsLoading(false));
     }, [userId]);
 
     return (
@@ -137,7 +154,7 @@ export default function EditUserModal({ isOpen, userId, onClose, onSave, readonl
                                 </Button>
                                 {
                                     !readonly &&
-                                    <Button onClick={() => onSave(form)} color="primary" onPress={onClose}>
+                                    <Button onClick={() => handleSave()} color="primary">
                                         Save
                                     </Button>
                                 }
