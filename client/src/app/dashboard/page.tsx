@@ -10,7 +10,8 @@ import {
     PaginationData,
     UserData
 } from '@/services/dashboard';
-import { api, handleErrorWithToast } from '@/services/api';
+import { handleErrorWithToast } from '@/services/api';
+import { useQueryState } from 'nuqs';
 import toast from 'react-hot-toast';
 import DeleteUserModal from '@/components/modals/DeleteUserModal';
 import EditUserModal, { UserPayload } from '@/components/modals/EditUserModal';
@@ -38,11 +39,13 @@ export default function Page() {
     const [isLoading, setIsLoading] = useState(false);
     const [pagination, setPagination] = useState<PaginationData['pagination']>(initialPaginationState);
 
+    const [queryString, setQueryString] = useQueryState('q');
+
     const [selectedUserId, setSelectedUserId] = useState<number | undefined>(undefined);
 
-    function listUsers(page: number = 1, search?: string) {
+    function listUsers(page: number = 1) {
         setIsLoading(true);
-        listUsersRequest(page, search)
+        listUsersRequest(page, queryString)
             .then(({ users, pagination }) => {
                 setUsers(users);
                 setPagination(pagination);
@@ -94,6 +97,7 @@ export default function Page() {
             .then(() => {
                 toast.success('User deleted successfully');
                 clearActionState();
+                listUsers(pagination.current_page);
             }).catch((err) => {
                 handleErrorWithToast(err);
             });
@@ -134,10 +138,12 @@ export default function Page() {
         <Wrapper>
             <DebouncedInput
                 className="mb-5"
+                initialValue={queryString}
                 placeholder="Search by username, first name or last name"
                 delay={500}
                 icon={<SearchIcon/>}
-                onStopTyping={(search) => listUsers(1, search)}
+                onStopTyping={() => listUsers()}
+                onChange={(content) => setQueryString(content)}
             />
             <UsersTable
                 onAction={onAction}
@@ -151,18 +157,26 @@ export default function Page() {
                 onConfirm={handleDeleteUser}
                 onClose={clearActionState}
             />
-            <EditUserModal
-                isOpen={action === 'edit'}
-                userId={selectedUserId}
-                onSave={handleEditUser}
-                onClose={clearActionState}
-            />
-            <EditUserModal
-                isOpen={action === 'details'}
-                readonly
-                userId={selectedUserId}
-                onClose={clearActionState}
-            />
+            {
+                action === 'edit' &&
+                <EditUserModal
+                    isOpen
+                    readonly={false}
+                    userId={selectedUserId}
+                    onSave={handleEditUser}
+                    onClose={clearActionState}
+                />
+            }
+            {
+                action === 'details' &&
+                <EditUserModal
+                    isOpen
+                    readonly={true}
+                    onSave={undefined}
+                    userId={selectedUserId}
+                    onClose={clearActionState}
+                />
+            }
             <ImpersonateConfirmationModal
                 isOpen={action === 'impersonate'}
                 onClose={clearActionState}
