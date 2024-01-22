@@ -28,7 +28,7 @@ class UserController extends Controller
             ->when(
                 $request->getSearch() ?? false,
                 fn (UserEloquentBuilder $builder) => $builder->filterByName($request->getSearch()),
-            )->paginate();
+            )->orderBy('username')->paginate();
 
         return $this->paginated($data, [
             'users' => UserResource::collection($data->items()),
