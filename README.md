@@ -96,7 +96,7 @@ This repository contains an implementation of a user management API developed as
 > cp .env.example .env
 ```
 
-### Step 4: Enter in our laravel application container
+### Step 3: Enter in your laravel application container
 ```bash
 > docker exec -it app /bin/sh
 ```
