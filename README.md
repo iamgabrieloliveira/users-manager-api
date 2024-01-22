@@ -1,3 +1,5 @@
+# 1.0
+
 # User Management API in Laravel
 
 This repository contains an implementation of a user management API developed as part of a technical test. The primary goal of this project is to showcase advanced skills in backend development using Laravel, with a focus on code quality through a 100% test coverage and an emphasis on maintainability.
@@ -23,6 +25,7 @@ This repository contains an implementation of a user management API developed as
 Due to personal circumstances, a complete frontend implementation was not feasible within the scope of this technical test. The developer chose to prioritize the quick delivery of the backend, emphasizing solid knowledge in Laravel and the ability to create robust and highly testable APIs.
 
 The focus on the backend does not diminish the importance of the frontend but reflects the priorities given the specific circumstances of this test. The backend code, however, is ready to be integrated into a frontend application when needed.
+
 ## How to run
 
 ### Step 1: Clone the repository
@@ -66,3 +69,52 @@ The focus on the backend does not diminish the importance of the frontend but re
 ```bash
 > php artisan test --coverage
 ```
+
+# 2.0
+
+# User Management 2.0
+
+This repository contains an implementation of a user management API developed as part of a technical test. The primary goal of this project is to showcase advanced skills in backend development using Laravel, and Next with a focus on code quality, authentication and maintainability.
+
+## Key Features
+
+- **NextJS 14 with Server-Side Rendering**: Leveraging the power of NextJS 14, the application employs server-side rendering for specific components, enhancing performance and delivering a seamless user experience. This approach ensures efficient rendering of content, reducing load times and improving overall responsiveness.
+
+- **JWT-Based Authentication System**: The application boasts a robust authentication system implemented with JSON Web Tokens (JWT). This secure and scalable authentication mechanism enhances user security while providing a seamless and efficient login experience. User credentials are securely managed, contributing to the overall integrity of the system.
+
+# How to run?
+
+### Step 1: Clone the repository
+```bash
+> git clone https://github.com/iamgabrieloliveira/users-manager-api.git
+
+> cd users-manager-api
+```
+
+### Step 2: Configure your environment variables
+```bash
+> cp .env.example .env
+```
+
+### Step 4: Enter in our laravel application container
+```bash
+> docker exec -it app /bin/sh
+```
+
+### Step 4: Run the migrations with seeders
+```bash
+> php artisan migrate --seed
+```
+
+### Step 5: Generate JWT secret key
+```bash
+> php artisan jwt:secret
+```
+
+### Step 6: Access frontend: 
+
+The project will be running at: http://localhost::3000
+
+
+
+
